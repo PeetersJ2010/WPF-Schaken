@@ -8,8 +8,7 @@
         WindowStyle="None"
          AllowsTransparency="True"
         Title="SplashScreenWindow" Height="600" Width="800">
-    <Grid Background="Black">
-        <Image Stretch="Fill" Source="/view/resources/images/forest.png" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+    <Grid Background="#384f2f">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"/>
@@ -20,9 +19,10 @@
                 <RowDefinition/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition/>
+                <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-            <Label Grid.Column="1" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">Chess WPF</Label>
+            
+            <Image Grid.Column="1" Margin="50" Source="/view/resources/images/chessWPF.png" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <Border Grid.Column="1" Grid.Row="2" BorderThickness="2" BorderBrush="Black">
                 <ProgressBar x:Name="progressBar"/>
             </Border>

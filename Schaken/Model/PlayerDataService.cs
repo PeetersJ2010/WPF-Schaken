@@ -74,6 +74,8 @@ namespace Schaken.Model
             });
         }
 
+
+
         public void InsertPlayer(Player player)
         {
             // SQL statement insert

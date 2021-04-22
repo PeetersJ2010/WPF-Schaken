@@ -9,7 +9,7 @@
         Title="SelectPlayersWindow" Height="600" Width="800">
     <Grid Background="Black">
         <Image Stretch="Fill" Source="/view/resources/images/forest.jpg" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-        <Image Stretch="Fill" Source="/view/resources/images/wood1.png" VerticalAlignment="Center" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="50"/>
+        <Image Stretch="Fill" Source="/view/resources/images/table.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50"/>
         <Grid Grid.Row="0" Grid.Column="0" Margin="80">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -29,6 +29,10 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource headingStyle}" >Select players</Label>
+            <Button Grid.Row="1" Grid.Column="2" Command="{Binding ToHomeWindowCommand}" Background="#384F2F" BorderThickness="0" Width="40" HorizontalAlignment="Right" Margin="0,0,20,0">
+                <Image Source="/view/resources/images/cancel.png"></Image>
+            </Button>
+            
             <Separator Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400"/>
             <Label Grid.Row="3" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16">White</Label>
             <ComboBox Grid.Row="4" Height="23" VerticalAlignment="Top" Width="300"  ItemsSource="{Binding Players}" DisplayMemberPath="Username" SelectedItem="{Binding SelectedPlayerWhite}"/>
@@ -39,7 +43,7 @@
             <Label Grid.Row="7" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16">Gamemode</Label>
             <ComboBox Grid.Row="8" Height="23" VerticalAlignment="Top" Width="250"  ItemsSource="{Binding Gamemodes}" DisplayMemberPath="GamemodeName" SelectedItem="{Binding SelectedGamemode}"/>
 
-            <Label Content="{Binding ErrorMessage}"/>
+            <Label Grid.Row="9" HorizontalAlignment="Center" Foreground="Red" FontWeight="Bold" Content="{Binding ErrorMessage}"/>
 
             <Button Grid.Row="10" Margin="0,0,0,0" Content="Start" Style="{StaticResource buttonStyle}" Command="{Binding ToGameWindowCommand}"/>
         </Grid>

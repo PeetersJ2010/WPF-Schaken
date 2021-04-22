@@ -14,9 +14,9 @@
             <Setter Property="FontFamily" Value="Rockwell" />
         </Style>
         <Style x:Key="buttonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="WhiteSmoke"/>
-            <Setter Property="Background" Value="DarkGreen"/>
-            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Foreground" Value="#171717"/>
+            <Setter Property="Background" Value="#dbdbdb"/>
+            <Setter Property="FontSize" Value="24" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontFamily" Value="Rockwell" />
            

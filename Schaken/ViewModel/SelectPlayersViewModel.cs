@@ -30,11 +30,13 @@ namespace Schaken.ViewModel
         public string ErrorMessage { get { return errorMessage; } set { errorMessage = value; NotifyPropertyChanged(); } }
 
         public ICommand ToGameWindowCommand { get; set; }
+        public ICommand ToHomeWindowCommand { get; set; }
 
         public SelectPlayersViewModel()
         {
             dialogNavigation = new DialogNavigation();
             ToGameWindowCommand = new BaseCommand(ToGameWindow);
+            ToHomeWindowCommand = new BaseCommand(ToHomeWindow);
             LoadPlayers();
             LoadGamemodes();
         }
@@ -43,12 +45,12 @@ namespace Schaken.ViewModel
             ErrorMessage = "";
             if (SelectedPlayerWhite == null || SelectedPlayerBlack == null || SelectedGamemode == null)
             {
-                ErrorMessage += "Zorg dat elk veld ingevuld is! \n";
+                ErrorMessage += "Fill all fields! \n";
             }
             else {
                 if (SelectedPlayerWhite.Username == SelectedPlayerBlack.Username)
                 {
-                    ErrorMessage += "Selecteer twee verschillende spelers! \n";
+                    ErrorMessage += "Select 2 different players! \n";
                 }
                 else
                 {
@@ -58,6 +60,10 @@ namespace Schaken.ViewModel
                     dialogNavigation.ShowGameWindow();
                 }
             }
+        }
+        private void ToHomeWindow()
+        {
+            dialogNavigation.ShowMainWindow();
         }
         private void LoadPlayers()
         {

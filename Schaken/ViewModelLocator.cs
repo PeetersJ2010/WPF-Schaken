@@ -20,6 +20,17 @@ namespace Schaken
             }
         }
 
+        // Match history
+        private static MatchHistoryViewModel matchHistoryViewModel = new MatchHistoryViewModel();
+
+        public static MatchHistoryViewModel MatchHistoryViewModel
+        {
+            get
+            {
+                return matchHistoryViewModel;
+            }
+        }
+
         // Player
         private static PlayerViewModel playerViewModel = new PlayerViewModel();
 
@@ -53,6 +64,17 @@ namespace Schaken
             }
         }
 
-        
+        // GameResult
+        private static GameResultViewModel gameResultViewModel = new GameResultViewModel();
+
+        public static GameResultViewModel GameResultViewModel
+        {
+            get
+            {
+                return gameResultViewModel;
+            }
+        }
+
+
     }
 }

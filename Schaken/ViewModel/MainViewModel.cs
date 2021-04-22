@@ -14,6 +14,7 @@ namespace Schaken.ViewModel
 
         public ICommand ToPlayersWindowCommand { get; set; }
         public ICommand ToSelectPlayersWindowCommand { get; set; }
+        public ICommand ToMatchHistoryWindowCommand { get; set; }
         
         public MainViewModel()
         {
@@ -25,6 +26,7 @@ namespace Schaken.ViewModel
         {
             ToPlayersWindowCommand = new BaseCommand(ToPlayersWindow);
             ToSelectPlayersWindowCommand = new BaseCommand(ToSelectPlayersWindow);
+            ToMatchHistoryWindowCommand = new BaseCommand(ToMatchHistoryWindow);
         }
 
         private void ToPlayersWindow()
@@ -35,6 +37,10 @@ namespace Schaken.ViewModel
         private void ToSelectPlayersWindow()
         {
             dialogNavigation.ShowSelectPlayersWindow();
+        }
+        private void ToMatchHistoryWindow()
+        {
+            dialogNavigation.ShowMatchHistoryWindow();
         }
     }
 }

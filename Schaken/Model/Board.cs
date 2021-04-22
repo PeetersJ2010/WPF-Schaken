@@ -14,20 +14,64 @@ namespace Schaken.Model
         private Player playerBlack;
         private Player playerWhite;
         private Gamemode gamemode;
-        private string winningPlayer;
-        private string losingPlayer;
+        private Color winningColor;
+        private ObservableCollection<Player> players;
+        private ObservableCollection<Gamemode> gamemodes;
+        private ObservableCollection<Color> colors;
 
         public int ID { get { return id; } set { id = value; } }
         public Player PlayerBlack { get { return playerBlack; } set { playerBlack = value; } }
         public Player PlayerWhite { get { return playerWhite; } set { playerWhite = value; } }
         public Gamemode Gamemode { get { return gamemode; } set { gamemode = value; } }
-        public string WinningPlayer { get { return winningPlayer; } set { winningPlayer = value; } }
-        public string LosingPlayer { get { return losingPlayer; } set { losingPlayer = value; } }
+        public Color WinningColor { get { return winningColor; } set { winningColor = value; } }
+        public ObservableCollection<Player> Players { get { return players; } set { players = value; } }
+        public ObservableCollection<Gamemode> Gamemodes { get { return gamemodes; } set { gamemodes = value; } }
+        public ObservableCollection<Color> Colors { get { return colors; } set { colors = value; } }
+
 
         public Board(int id)
         {
             ID = id;
             CreateBoard();
+        }
+
+        public Board(int id, int playerBlackID, int playerWhiteID, int gamemodeID, int winningColorID)
+        {
+            ID = id;
+
+            PlayerDataService playerDS = new PlayerDataService();
+            Players = new ObservableCollection<Player>(playerDS.GetPlayers());
+            foreach (var player in Players)
+            {
+                if (player.ID == playerBlackID)
+                {
+                    PlayerBlack = player;
+                }
+                if (player.ID == playerWhiteID)
+                {
+                    PlayerWhite = player;
+                }
+            }
+
+            GamemodeDataService gamemodeDS = new GamemodeDataService();
+            Gamemodes = new ObservableCollection<Gamemode>(gamemodeDS.GetGamemodes());
+            foreach (var gamemode in Gamemodes)
+            {
+                if (gamemode.ID == gamemodeID)
+                {
+                    Gamemode = gamemode;
+                }
+            }
+
+            ColorDataService colorDS = new ColorDataService();
+            Colors = new ObservableCollection<Color>(colorDS.GetColors());
+            foreach (var color in colors)
+            {
+                if (color.ID == winningColorID)
+                {
+                    WinningColor = color;
+                }
+            }
         }
 
         private void CreateBoard()

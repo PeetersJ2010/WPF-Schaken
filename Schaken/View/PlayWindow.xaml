@@ -29,7 +29,7 @@
     </Window.Resources>
     <Grid Background="Black">
         <Image Stretch="Fill" Source="/view/resources/images/forest.jpg" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-        <Image Stretch="Fill" Source="/view/resources/images/wood1.png" VerticalAlignment="Center" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="50"/>
+        <Image Stretch="Fill" Source="/view/resources/images/table.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50"/>
         <Grid Grid.Row="0" Grid.Column="0" Margin="80">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="126"/>
@@ -64,7 +64,7 @@
             <Label Grid.Column="2" Grid.Row="5" Content="{Binding ContentCapturedBlack}"/>
 
 
-            <Button Command="{Binding MoveCommand}" Content="Resign" Grid.Row="6" Grid.Column="1" Margin="60,8" Style="{StaticResource buttonStyleAlt}"/>
+            <Button Command="{Binding ResignCommand}" Content="Resign" Grid.Row="6" Grid.Column="1" Margin="60,8" Style="{StaticResource buttonStyleAlt}"/>
 
             <ItemsControl ItemsSource="{Binding Board}" 
 			ItemTemplate="{StaticResource CellTemplate}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" Margin="20" RenderTransformOrigin="0.465,0.571">

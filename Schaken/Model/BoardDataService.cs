@@ -17,23 +17,37 @@ namespace Schaken.Model
         //Connection
         private static IDbConnection db = new SqlConnection(connectionString);
 
+        public List<Board> GetMatches()
+        {
+            //SQL Query
+            string sql = "select Match.ID, pb.ID as playerBlackID, pw.ID as playerWhiteID, Gamemode.ID as gamemodeID, Match.winningColorID as winningColorID from Match inner join Player as pb on pb.ID = Match.playerBlackID inner join Player as pw on pw.ID = Match.playerWhiteID inner join Gamemode on Gamemode.ID = Match.gamemodeID";
+
+            // Check if a match exists
+            List<String> ml = (List<String>)db.Query<String>("select * from Match");
+            if (ml.Count > 0)
+            {
+                return (List<Board>)db.Query<Board>(sql);
+            }
+            // Return an empty list
+            List<Board> emptyList = new List<Board>();
+            return emptyList;
+        }
+
         public void AddMatch(Board board)
         {
             int pbid = board.PlayerBlack.ID;
             int pwid = board.PlayerWhite.ID;
             int gmid = board.Gamemode.ID;
-            string wp = board.WinningPlayer;
-            string lp = board.LosingPlayer;
+            int wc = board.WinningColor.ID;
 
-            string sql = "Insert into Match (playerBlackID, playerWhiteID, gamemodeID, winningPlayer, losingPlayer) values (@pbid, @pwid, @gmid, @wp, @lp)";
+            string sql = "Insert into Match (playerBlackID, playerWhiteID, gamemodeID, winningColorID) values (@pbid, @pwid, @gmid, @wc)";
 
             db.Execute(sql, new
             {
                 pbid,
                 pwid,
                 gmid,
-                wp,
-                lp
+                wc
             });
         }
 
@@ -46,7 +60,6 @@ namespace Schaken.Model
             {
                 foreach (var item in bl)
                 {
-                    Console.WriteLine(item);
                     return Int32.Parse(item);
                 }
             }
@@ -60,13 +73,8 @@ namespace Schaken.Model
 
 
 
-        public List<Player> GetPlayers()
-        {
-            //SQL Query
-            string sql = "select * from Player order by Rating desc";
-            //Execute
-            return (List<Player>)db.Query<Player>(sql);
-        }
+
+
 
         public List<Player> GetPlayersByID()
         {

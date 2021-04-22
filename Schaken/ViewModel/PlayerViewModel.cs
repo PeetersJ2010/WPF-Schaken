@@ -11,6 +11,7 @@ namespace Schaken.ViewModel
 {
     class PlayerViewModel : BaseViewModel
     {
+        private DialogNavigation dialogNavigation;
         private int newId = 0, baseRating = 500;
         private string errorMessage;
 
@@ -21,11 +22,13 @@ namespace Schaken.ViewModel
         public ICommand AddPlayerCommand { get; set; }
         public ICommand ChangePlayerCommand { get; set; }
         public ICommand DeletePlayerCommand { get; set; }
+        public ICommand ToHomeWindowCommand { get; set; }
 
         public PlayerViewModel()
         {
             LoadPlayers();
             BindCommands();
+            dialogNavigation = new DialogNavigation();
         }
         private void LoadPlayers()
         {
@@ -39,6 +42,8 @@ namespace Schaken.ViewModel
             AddPlayerCommand = new BaseCommand(AddPlayer);
             ChangePlayerCommand = new BaseCommand(ChangePlayer);
             DeletePlayerCommand = new BaseCommand(DeletePlayer);
+            // nav
+            ToHomeWindowCommand = new BaseCommand(ToHomeWindow);
         }
         private void AddPlayer()
         {
@@ -50,8 +55,6 @@ namespace Schaken.ViewModel
 
             if (SelectedPlayer == null)
             {
-                
-
                 // Get id of most recent player and add 1
                 id = playerDS.GetLastPlayerID() + 1;
                 string name = "Player " + id.ToString();
@@ -78,8 +81,6 @@ namespace Schaken.ViewModel
             }
             else
             {
-                
-
                 // Check if username already exists
                 players = playerDS.GetPlayers();
                 foreach (var player in players)
@@ -172,5 +173,10 @@ namespace Schaken.ViewModel
 
         private Player selectedPlayer;
         public Player SelectedPlayer { get { return selectedPlayer; } set { selectedPlayer = value; NotifyPropertyChanged(); } }
+
+        private void ToHomeWindow()
+        {
+            dialogNavigation.ShowMainWindow();
+        }
     }
 }

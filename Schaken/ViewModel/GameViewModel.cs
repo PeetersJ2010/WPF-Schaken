@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+
 
 namespace Schaken.ViewModel
 {
@@ -25,37 +25,50 @@ namespace Schaken.ViewModel
         private Cell currentCell;
         private ObservableCollection<String> capturedPiecesWhite;
         private ObservableCollection<String> capturedPiecesBlack;
+        private ObservableCollection<Color> colors;
 
+        public ObservableCollection<Color> Colors { get { return colors; } set { colors = value; NotifyPropertyChanged(); } }
         public ObservableCollection<String> CapturedPiecesWhite { get { return capturedPiecesWhite; } set { capturedPiecesWhite = value; NotifyPropertyChanged(); } }
         public ObservableCollection<String> CapturedPiecesBlack { get { return capturedPiecesBlack; } set { capturedPiecesBlack = value; NotifyPropertyChanged(); } }
+
         public Board Board { get { return board; } set { board = value; NotifyPropertyChanged(); } }
         public string Turn { get { return turn; } set { turn = value; NotifyPropertyChanged(); } }
         public Cell CurrentCell { get { return currentCell; } set { currentCell = value; NotifyPropertyChanged(); } }
 
 
         public ICommand MoveCommand { get; set; }
+        public ICommand ResignCommand { get; set; }
+        public ICommand ToGameResultCommand { get; set; }
 
         public GameViewModel()
         {
+            dialogNavigation = new DialogNavigation();
             CapturedPiecesWhite = new ObservableCollection<String>();
             CapturedPiecesBlack = new ObservableCollection<String>();
             Board = new Board(GetLatestBoardID());
             BindCommands();
+            LoadColors();
         }
 
         private void BindCommands()
         {
             MoveCommand = new BaseParCommand(Move);
+            ResignCommand = new BaseCommand(Resign);
+            ToGameResultCommand = new BaseCommand(ToGameResult);
+        }
+        private void LoadColors()
+        {
+            ColorDataService colorDS = new ColorDataService();
+            Colors = new ObservableCollection<Color>(colorDS.GetColors());
+        }
+
+        private void ToGameResult()
+        {
+            dialogNavigation.ShowGameResultWindow();
         }
 
         private void Move(object cellId)
         {
-            // Set the selected players and gamemode parameters
-            if (gamemodeTemp != null)
-            {
-                SetParameters();
-            }
-
             // Get Cell by Id
             int cId = (int)cellId;
             Cell selectedCell = Board.FirstOrDefault(s => s.Id == cId);
@@ -75,44 +88,17 @@ namespace Schaken.ViewModel
                     {
                         if(selectedCell.Piece == "King"){
                             // Determine winning colors
-                            if (selectedCell.PieceColor == "Black")
+                            foreach (var color in Colors)
                             {
-                                board.WinningPlayer = "White";
-                                board.LosingPlayer = "Black";
-                            }
-                            else
-                            {
-                                board.WinningPlayer = "Black";
-                                board.LosingPlayer = "White";
-                            }
-
-                            // Game over, king was captured
-                            BoardDataService boardDS = new BoardDataService();
-                            boardDS.AddMatch(Board);
-
-                            // Add pieces to database
-                            foreach (Cell cell in board)
-                            {
-                                if (cell.Occupied)
+                                if (selectedCell.PieceColor == color.ColorName)
                                 {
-                                    PieceDataService pieceDS = new PieceDataService();
-                                    pieceDS.AddPiece(cell);
+                                    Board.WinningColor = color;
                                 }
+                                
                             }
-
-
-                            //Reset board
-                            Board = new Board(GetLatestBoardID());
-                            CurrentCell = null;
-                            CapturedPiecesWhite = new ObservableCollection<String>();
-                            NotifyPropertyChanged("ContentCapturedWhite");
-                            CapturedPiecesBlack = new ObservableCollection<String>();
-                            NotifyPropertyChanged("ContentCapturedBlack");
-                            Turn = "White";
-
-                            // Navigate to home
-                            dialogNavigation = new DialogNavigation();
-                            dialogNavigation.ShowMainWindow();
+                           
+                            // End the game
+                            EndGame();
                         }
                         else
                         {
@@ -148,11 +134,104 @@ namespace Schaken.ViewModel
             }
         }
 
+        private void Resign() {
+            // Determine winning player
+            foreach (var color in Colors)
+            {
+                if (Turn != color.ColorName)
+                {
+                    Board.WinningColor = color;
+                }
+
+            }
+
+            EndGame();
+        }
+
+        private void EndGame()
+        {
+            // Set the selected players and gamemode parameters
+            if (gamemodeTemp != null)
+            {
+                SetParameters();
+            }
+
+            // Game over, king was captured
+            BoardDataService boardDS = new BoardDataService();
+            boardDS.AddMatch(Board);
+
+            // Reload match history
+            ViewModelLocator.MatchHistoryViewModel.LoadMatches();
+
+            // Add pieces to database
+            foreach (Cell cell in Board)
+            {
+                if (cell.Occupied)
+                {
+                    //PieceDataService pieceDS = new PieceDataService();
+                    //pieceDS.AddPiece(cell);
+                }
+            }
+
+            // Pass result messages
+            GameResultViewModel grvm = new GameResultViewModel();
+            PlayerDataService playerDS = new PlayerDataService();
+            if (Board.WinningColor.ColorName == "White")
+            {
+                grvm.ResultPlayer1 = Board.PlayerWhite.Username + " wins!"; // Winner
+                grvm.ScorePlayer1 = Board.PlayerWhite.Rating + " +0";
+                grvm.ResultPlayer2 = Board.PlayerBlack.Username + " loses!"; // Loser
+                grvm.ScorePlayer2 = Board.PlayerBlack.Rating + " -0";
+
+                if (Board.Gamemode.GamemodeName == "Ranked")
+                {
+                    grvm.ScorePlayer1 = Board.PlayerWhite.Rating + " +20";
+                    grvm.ScorePlayer2 = Board.PlayerBlack.Rating + " -20";
+                    // Update rating in DB
+                    Board.PlayerWhite.Rating += 20;
+                    playerDS.UpdatePlayer(Board.PlayerWhite);
+                    Board.PlayerBlack.Rating -= 20;
+                    playerDS.UpdatePlayer(Board.PlayerBlack);
+                }
+            }
+            else
+            {
+                grvm.ResultPlayer1 = Board.PlayerBlack.Username + " wins!"; // Winner
+                grvm.ScorePlayer1 = Board.PlayerBlack.Rating + " +0";
+                grvm.ResultPlayer2 = Board.PlayerWhite.Username + " loses!"; // Loser
+                grvm.ScorePlayer2 = Board.PlayerWhite.Rating + " -0";
+
+                if (board.Gamemode.GamemodeName == "Ranked")
+                {
+                    grvm.ScorePlayer1 = Board.PlayerBlack.Rating + " +20";
+                    grvm.ScorePlayer2 = Board.PlayerWhite.Rating + " -20";
+                    // Update rating in DB
+                    Board.PlayerBlack.Rating += 20;
+                    playerDS.UpdatePlayer(Board.PlayerBlack);
+                    Board.PlayerWhite.Rating -= 20;
+                    playerDS.UpdatePlayer(Board.PlayerWhite);
+                }
+            }
+
+            //Reset board
+            Board = new Board(GetLatestBoardID());
+            CurrentCell = null;
+            CapturedPiecesWhite = new ObservableCollection<String>();
+            NotifyPropertyChanged("ContentCapturedWhite");
+            CapturedPiecesBlack = new ObservableCollection<String>();
+            NotifyPropertyChanged("ContentCapturedBlack");
+            Turn = "White";
+
+
+            // Navigate to home
+            ToGameResult();
+        }
+
         private void SetParameters()
         {
-            board.PlayerBlack = playerBlackTemp;
-            board.PlayerWhite = playerWhiteTemp;
-            board.Gamemode = gamemodeTemp;
+            Board.PlayerBlack = playerBlackTemp;
+            Board.PlayerWhite = playerWhiteTemp;
+            Board.Gamemode = gamemodeTemp;
 
             playerBlackTemp = null;
             playerWhiteTemp = null;
