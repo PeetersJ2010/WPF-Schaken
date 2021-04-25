@@ -71,6 +71,8 @@
     <Compile Include="Model\GamemodeDataService.cs" />
     <Compile Include="Model\Piece.cs" />
     <Compile Include="Model\PieceDataService.cs" />
+    <Compile Include="Model\PieceType.cs" />
+    <Compile Include="Model\PieceTypeDataService.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\PlayerDataService.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="ViewModel\GameResultViewModel.cs" />
     <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\MatchDetailViewModel.cs" />
     <Compile Include="ViewModel\MatchHistoryViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\SelectPlayersViewModel.cs" />
@@ -92,6 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\MatchDetailWindow.xaml.cs">
+      <DependentUpon>MatchDetailWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MatchHistoryWindow.xaml.cs">
       <DependentUpon>MatchHistoryWindow.xaml</DependentUpon>
@@ -113,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MatchDetailWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

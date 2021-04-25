@@ -71,7 +71,7 @@ namespace Schaken.ViewModel
         {
             // Get Cell by Id
             int cId = (int)cellId;
-            Cell selectedCell = Board.FirstOrDefault(s => s.Id == cId);
+            Cell selectedCell = Board.FirstOrDefault(s => s.ID == cId);
 
             // Check if selection was already made
             if (CurrentCell != null)
@@ -87,6 +87,10 @@ namespace Schaken.ViewModel
                     if (selectedCell.LegalMove)
                     {
                         if(selectedCell.Piece == "King"){
+                            Board.Move(CurrentCell, selectedCell);
+                            Board.ClearBoard();
+                            CurrentCell = null;
+
                             // Determine winning colors
                             foreach (var color in Colors)
                             {
@@ -115,6 +119,7 @@ namespace Schaken.ViewModel
                                     NotifyPropertyChanged("ContentCapturedBlack");
                                 }
                             }
+
                             Board.Move(CurrentCell, selectedCell);
                             Board.ClearBoard();
                             CurrentCell = null;
@@ -142,7 +147,6 @@ namespace Schaken.ViewModel
                 {
                     Board.WinningColor = color;
                 }
-
             }
 
             EndGame();
@@ -163,13 +167,16 @@ namespace Schaken.ViewModel
             // Reload match history
             ViewModelLocator.MatchHistoryViewModel.LoadMatches();
 
+            
+
+
             // Add pieces to database
             foreach (Cell cell in Board)
             {
                 if (cell.Occupied)
                 {
-                    //PieceDataService pieceDS = new PieceDataService();
-                    //pieceDS.AddPiece(cell);
+                    PieceDataService pieceDS = new PieceDataService();
+                    pieceDS.AddPiece(cell);
                 }
             }
 

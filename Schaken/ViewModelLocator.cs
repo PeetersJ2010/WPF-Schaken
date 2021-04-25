@@ -9,6 +9,8 @@ namespace Schaken
 {
     class ViewModelLocator
     {
+
+
         // Main
         private static MainViewModel mainViewModel = new MainViewModel();
 
@@ -28,6 +30,17 @@ namespace Schaken
             get
             {
                 return matchHistoryViewModel;
+            }
+        }
+
+        // Match detail
+        private static MatchDetailViewModel matchDetailViewModel = new MatchDetailViewModel();
+
+        public static MatchDetailViewModel MatchDetailViewModel
+        {
+            get
+            {
+                return matchDetailViewModel;
             }
         }
 

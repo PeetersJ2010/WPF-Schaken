@@ -25,7 +25,10 @@ namespace Schaken.ViewModel
         public String ErrorMessage { get { return errorMessage; } set { errorMessage = value; NotifyPropertyChanged(); } }
 
         public ICommand ToHomeWindowCommand { get; set; }
+        public ICommand ToViewMatchCommand { get; set; }
         public ICommand AddMatchCommand { get; set; }
+        public ICommand ChangeMatchCommand { get; set; }
+        public ICommand DeleteMatchCommand { get; set; }
 
 
         public MatchHistoryViewModel()
@@ -56,7 +59,11 @@ namespace Schaken.ViewModel
         private void BindCommands()
         {
             ToHomeWindowCommand = new BaseCommand(ToHomeWindow);
+            ToViewMatchCommand = new BaseCommand(ToViewMatch);
             AddMatchCommand = new BaseCommand(AddMatch);
+            ChangeMatchCommand = new BaseCommand(ChangeMatch);
+            DeleteMatchCommand = new BaseCommand(DeleteMatch);
+            
         }
 
         private void AddMatch()
@@ -82,7 +89,7 @@ namespace Schaken.ViewModel
             }
             else
             {
-                if (SelectedBoard.PlayerWhite == SelectedBoard.PlayerBlack)
+                if (SelectedBoard.PlayerWhite.Username == SelectedBoard.PlayerBlack.Username)
                 {
                     ErrorMessage += "Select 2 different players! \n";
                 }
@@ -97,9 +104,53 @@ namespace Schaken.ViewModel
             LoadMatches();
         }
 
+        private void ChangeMatch()
+        {
+            if (SelectedBoard != null)
+            {
+                BoardDataService boardDS = new BoardDataService();
+                ErrorMessage = "";
+
+                // Check if both usernames are different.
+                if (SelectedBoard.PlayerWhite.Username == SelectedBoard.PlayerBlack.Username)
+                {
+                    ErrorMessage += "Select 2 different players! \n";
+                }
+                else
+                {        
+                    boardDS.UpdateMatch(SelectedBoard);
+                        
+                    // Refresh
+                    LoadMatches();
+                }
+            }
+        }
+
+        private void DeleteMatch()
+        {
+            if (SelectedBoard != null)
+            {
+                BoardDataService boardDS = new BoardDataService();
+                boardDS.DeleteMatch(SelectedBoard);
+
+                //Refresh
+                LoadMatches();
+            }
+        }
+
         private void ToHomeWindow()
         {
             dialogNavigation.ShowMainWindow();
+        }
+        private void ToViewMatch()
+        {
+            if (SelectedBoard != null)
+            {
+                ViewModelLocator.MatchDetailViewModel.Board = SelectedBoard;
+                //ViewModelLocator.MatchDetailViewModel.Board.CreateBoard();
+                ViewModelLocator.MatchDetailViewModel.Board.ReCreateBoard(SelectedBoard);
+                dialogNavigation.ShowMatchDetailWindow();
+            }    
         }
     }
 }

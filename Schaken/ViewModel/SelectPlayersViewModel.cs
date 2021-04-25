@@ -54,9 +54,10 @@ namespace Schaken.ViewModel
                 }
                 else
                 {
-                    GameViewModel.playerWhiteTemp = SelectedPlayerWhite;
-                    GameViewModel.playerBlackTemp = SelectedPlayerBlack;
-                    GameViewModel.gamemodeTemp = SelectedGamemode;
+                    ViewModelLocator.GameViewModel.Board.PlayerWhite = SelectedPlayerWhite;
+                    ViewModelLocator.GameViewModel.Board.PlayerBlack = SelectedPlayerBlack;
+
+                    ViewModelLocator.GameViewModel.Board.Gamemode = SelectedGamemode;
                     dialogNavigation.ShowGameWindow();
                 }
             }
@@ -65,7 +66,7 @@ namespace Schaken.ViewModel
         {
             dialogNavigation.ShowMainWindow();
         }
-        private void LoadPlayers()
+        public void LoadPlayers()
         {
             PlayerDataService playerDS = new PlayerDataService();
             Players = new ObservableCollection<Player>(playerDS.GetPlayers());

@@ -34,6 +34,16 @@
         </Style>
 
         <!--Crud-->
+        <Style x:Key="Crud_Detail" TargetType="Button">
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontFamily" Value="Rockwell" />
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Width" Value="200" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
         <Style x:Key="Crud_Add" TargetType="Button">
             <Setter Property="Foreground" Value="WhiteSmoke"/>
             <Setter Property="Background" Value="ForestGreen"/>

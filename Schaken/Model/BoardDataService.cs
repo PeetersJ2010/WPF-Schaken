@@ -66,72 +66,40 @@ namespace Schaken.Model
             return 0;
         }
 
-
-
-
-
-
-
-
-
-
-
-        public List<Player> GetPlayersByID()
+        public void UpdateMatch(Board board)
         {
+            int id = board.ID;
+            int pbid = board.PlayerBlack.ID;
+            int pwid = board.PlayerWhite.ID;
+            int wcid = board.WinningColor.ID;
+
+            Console.WriteLine(id);
+            Console.WriteLine(pwid);
+            Console.WriteLine(pbid);
+            Console.WriteLine(wcid);
+
             //SQL Query
-            string sql = "select * from Player order by ID desc";
-            //Execute
-            return (List<Player>)db.Query<Player>(sql);
-        }
-
-        public Player GetPlayer(Player player)
-        {
-            int id = player.ID;
-            string sql = "select * from Player where ID = " + id;
-            List<Player> result = (List<Player>)db.Query<Player>(sql);
-            if (result.Count != 0)
-            {
-                return result[0];
-            }
-
-            return null;
-        }
-
-        public void UpdatePlayer(Player player)
-        {
-            //SQL Query
-            string sql = "update Player set Rating = @rating, Username = @username, RealName = @realname where ID = @id";
+            string sql = "update Match set playerBlackID = @pbid, playerWhiteID = @pwid, winningColorID = @wcid where ID = @id";
             //Execute + Param
             db.Execute(sql, new
             {
-                player.ID,
-                player.Rating,
-                player.RealName,
-                player.Username
+                pbid,
+                pwid,
+                wcid,
+                id
             });
         }
 
-        public void InsertPlayer(Player player)
+        public void DeleteMatch(Board board)
         {
-            // SQL statement insert
-            string sql = "Insert into Player (Rating, Username, RealName) values (@rating, @username, @realname)";
-
-            // Uitvoeren SQL statement en doorgeven parametercollectie
-            db.Execute(sql, new
-            {
-                player.Rating,
-                player.RealName,
-                player.Username
-            });
-        }
-
-        public void DeletePlayer(Player player)
-        {
+            int bid = board.ID; 
             // SQL statement delete 
-            string sql = "Delete Player where ID = @id";
-
+            string sql = "Delete from Piece where Piece.matchID = @bid";
             // Uitvoeren SQL statement en doorgeven parametercollectie
-            db.Execute(sql, new { player.ID });
+            db.Execute(sql, new { bid });
+
+            sql = "Delete from Match where Match.ID = @bid";
+            db.Execute(sql, new { bid });
         }
     }
 }

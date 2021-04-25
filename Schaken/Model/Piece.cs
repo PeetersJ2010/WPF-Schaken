@@ -11,30 +11,13 @@ namespace Schaken.Model
         private string name, color;
         private bool isCaptured;
         private Cell currentCell;
+        
 
         public Piece(string name, string color)
         {
             Name = name;
             Color = color;
             IsCaptured = false;
-            if (color == "White")
-            {
-                switch (name)
-                {
-                    case "Rook":
-                        
-                        break;
-                }
-            }
-            else
-            {
-                switch (name)
-                {
-                    case "Rook":
-
-                        break;
-                }
-            }
         }
 
         public string Name { get; set; }

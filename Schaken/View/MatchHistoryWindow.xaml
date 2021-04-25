@@ -52,30 +52,30 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="150"/>
-
+                        <RowDefinition Height="125"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.ColumnSpan="2">
-                        <Label>White:</Label>
-                        <ComboBox Margin="10,0" ItemsSource="{Binding Players}" DisplayMemberPath="Username" SelectedValuePath="Username" SelectedValue="{Binding SelectedBoard.PlayerWhite.Username,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Grid.Row="1">Black:</Label>
-                        <ComboBox Margin="10,0" ItemsSource="{Binding Players}" DisplayMemberPath="Username" SelectedValuePath="Username" SelectedValue="{Binding SelectedBoard.PlayerBlack.Username,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Grid.Row="2">Winning player:</Label>
-                        <ComboBox Margin="10,0" ItemsSource="{Binding Colors}" DisplayMemberPath="ColorName" SelectedValuePath="ColorName" SelectedValue="{Binding SelectedBoard.WinningColor.ColorName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Padding="11,2">White:</Label>
+                        <ComboBox Margin="10,0" ItemsSource="{Binding Players}" DisplayMemberPath="Username" SelectedValuePath="Username" SelectedValue="{Binding SelectedBoard.PlayerWhite.Username}"/>
+                        <Label Padding="11,2" Grid.Row="1">Black:</Label>
+                        <ComboBox Margin="10,0" ItemsSource="{Binding Players}" DisplayMemberPath="Username" SelectedValuePath="Username" SelectedValue="{Binding SelectedBoard.PlayerBlack}"/>
+                        <Label Padding="11,2" Grid.Row="2">Winning player:</Label>
+                        <ComboBox Margin="10,0" ItemsSource="{Binding Colors}" DisplayMemberPath="ColorName" SelectedValuePath="ColorName" SelectedValue="{Binding SelectedBoard.WinningColor}"/>
                     </StackPanel>
 
-                    <Label Grid.Row="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Content="{Binding ErrorMessage}" FontWeight="Bold" Foreground="Red"/>
-
                     <StackPanel Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                        <Button Content="View match" Command="{Binding ToViewMatchCommand}" Style="{StaticResource Crud_Detail}"/>
                         <Button Content="Add match" Command="{Binding AddMatchCommand}" Style="{StaticResource Crud_Add}"/>
-                        <Button Margin="10,10,10,10" Content="Wijzigen"
-                    Command="{Binding ChangePlayerCommand}" Style="{StaticResource Crud_Edit}"/>
-                        <Button Content="Delete player" Command="{Binding DeletePlayerCommand}" Style="{StaticResource Crud_Delete}" />
+                        <Button Margin="10,0" Content="Edit match"
+                    Command="{Binding ChangeMatchCommand}" Style="{StaticResource Crud_Edit}"/>
+                        <Button Content="Delete match" Command="{Binding DeleteMatchCommand}" Style="{StaticResource Crud_Delete}" />
 
                     </StackPanel>
                 </Grid>
             </Border>
+
+            <Label Grid.Row="3" Grid.Column="3" Padding="0" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="Red"  Content="{Binding ErrorMessage}" />
 
         </Grid>
     </Grid>

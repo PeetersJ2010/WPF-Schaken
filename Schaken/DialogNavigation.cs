@@ -16,6 +16,7 @@ namespace Schaken
         private Window selectPlayersWindow = null;
         private Window gameResultWindow = null;
         private Window matchHistoryWindow = null;
+        private Window matchDetailWindow = null;
 
         public DialogNavigation()
         {
@@ -62,6 +63,12 @@ namespace Schaken
             gameResultWindow = new GameResultWindow();
             Application.Current.Windows[0].Close();
             gameResultWindow.ShowDialog();
+        }
+        public void ShowMatchDetailWindow()
+        {
+            matchDetailWindow = new MatchDetailWindow();
+            Application.Current.Windows[0].Close();
+            matchDetailWindow.ShowDialog();
         }
     }
 }

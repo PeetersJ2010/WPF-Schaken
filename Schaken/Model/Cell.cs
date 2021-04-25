@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,42 @@ namespace Schaken.Model
         private bool occupied, legalMove;
         private string piece, pieceColor, pieceImg;
         private SolidColorBrush fillColor, textColor;
+        private ObservableCollection<PieceType> pieceTypes;
+        private ObservableCollection<Color> colors;
+
+        public ObservableCollection<PieceType> PieceTypes { get { return pieceTypes; } set { pieceTypes = value; } }
+        public ObservableCollection<Color> Colors { get { return colors; } set { colors = value; } }
+
+        public Cell(int name, int color, int posX, int posY)
+        {
+            PieceTypeDataService pieceTypeDS = new PieceTypeDataService();
+            PieceTypes = new ObservableCollection<PieceType>(pieceTypeDS.GetPieceTypes());
+            ColorDataService colorDS = new ColorDataService();
+            Colors = new ObservableCollection<Color>(colorDS.GetColors());
+
+            foreach (var pieceType in PieceTypes)
+            {
+                if (pieceType.ID == name)
+                {
+                    Piece = pieceType.PieceTypeName;
+                }
+            }
+
+            foreach (var c in Colors)
+            {
+                if (c.ID == color)
+                {
+                    PieceColor = c.ColorName;
+                }
+            }
+
+            ColumnNumber = posX;
+            RowNumber = posY;
+        }
 
         public Cell(int id, int col, int row, SolidColorBrush colorBG)
         {
-            
-            Id = id;
+            ID = id;
             ColumnNumber = col;
             RowNumber = row;
             FillColor = colorBG;
@@ -26,7 +58,7 @@ namespace Schaken.Model
             if ((col == 0 || col == 7) && (row == 0 || row == 7))
             {
                 Piece = "Rook";
-                PieceImg = row == 0 ? "rookw.png" : "rookb.png";  
+                PieceImg = row == 0 ? "rookw.png" : "rookb.png";
             }
 
             else if ((col == 1 || col == 6) && (row == 0 || row == 7))
@@ -84,7 +116,49 @@ namespace Schaken.Model
             }
         }
 
-        public int Id { get { return id; } set { id = value; NotifyPropertyChanged(); } }
+        // Add cell from cell instance to board
+        public Cell(int x, int y, string colorBG, Cell cell)
+        {
+            ID = int.Parse(x.ToString() + y.ToString());
+            ColumnNumber = x;
+            RowNumber = y;
+            FillColor = (SolidColorBrush)(new BrushConverter().ConvertFrom(colorBG));
+
+            Console.WriteLine(cell.PieceColor);
+            Console.WriteLine(cell.Piece);
+
+            if (cell.PieceColor == "White")
+            {
+                PieceImg = cell.Piece.ToLower() + "w.png";
+                Console.WriteLine(PieceImg);
+            }
+            else{
+                PieceImg = cell.Piece.ToLower() + "b.png";
+                Console.WriteLine(PieceImg);
+            }
+
+            TextColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ff0000"));
+            PieceColor = "White";
+            Occupied = true;
+        }
+
+        // Add empty cell to board
+        public Cell(int x, int y, string colorBG)
+        {
+            ID = int.Parse(x.ToString() + y.ToString());
+            ColumnNumber = x;
+            RowNumber = y;
+            FillColor = (SolidColorBrush)(new BrushConverter().ConvertFrom(colorBG));
+
+            Piece = "";
+            PieceImg = "";
+
+            TextColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ffffff"));
+            PieceColor = "";
+            Occupied = false;
+        }
+
+        public int ID { get { return id; } set { id = value; NotifyPropertyChanged(); } }
         public int RowNumber { get { return rowNumber; } set { rowNumber = value; NotifyPropertyChanged(); } }
         public int ColumnNumber { get { return columnNumber; } set { columnNumber = value; NotifyPropertyChanged(); } }
         public bool LegalMove { get { return legalMove; } set { legalMove = value; NotifyPropertyChanged(); } }

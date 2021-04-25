@@ -74,7 +74,7 @@ namespace Schaken.Model
             }
         }
 
-        private void CreateBoard()
+        public void CreateBoard()
         {
             string color_White = "#f2f2f2"; // #f2f2f2 -> White
             string color_Black = "#696969"; // #000000 -> Black
@@ -85,23 +85,43 @@ namespace Schaken.Model
                 for (int j = 0; j < 8; j++)
                 {
                     this.Add(new Cell((int.Parse(i.ToString() + j.ToString())), j, i, (SolidColorBrush)(new BrushConverter().ConvertFrom(colorBG))));
-                    if (colorBG == color_White)
-                    {
-                        colorBG = color_Black;
-                    }
-                    else
-                    {
-                        colorBG = color_White;
-                    }
+                    colorBG = colorBG == color_White ? color_Black : color_White;
                 }
-                if (colorBG == color_White)
+                colorBG = colorBG == color_White ? color_Black : color_White;
+            }
+        }
+
+        // Method to recreate the state of a previous board
+        public void ReCreateBoard(Board board)
+        {
+            PieceDataService pieceDS = new PieceDataService();
+            List<Cell> pieceList = pieceDS.GetBoardPieces(board);
+
+            string color_White = "#f2f2f2"; // #f2f2f2 -> White
+            string color_Black = "#696969"; // #000000 -> Black
+            string colorBG = color_White;
+            bool o;
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
                 {
-                    colorBG = color_Black;
+                    o = false;
+                    foreach (var piece in pieceList)
+                    {
+                        if (piece.ColumnNumber == i && piece.RowNumber == j)
+                        {
+                            this.Add(new Cell(i, j, colorBG, piece));
+                            o = true;
+                        }
+                    }
+                    if (!o)
+                    {
+                        this.Add(new Cell(i, j, colorBG));
+                    }
+                    colorBG = colorBG == color_White ? color_Black : color_White;
                 }
-                else
-                {
-                    colorBG = color_White;
-                }
+                colorBG = colorBG == color_White ? color_Black : color_White;
             }
         }
 
@@ -118,35 +138,36 @@ namespace Schaken.Model
                 {
                     this.FirstOrDefault(s => s.ColumnNumber == j && s.RowNumber == i).FillColor = (SolidColorBrush)(new BrushConverter().ConvertFrom(colorBG));
                     this.FirstOrDefault(s => s.ColumnNumber == j && s.RowNumber == i).LegalMove = false;
-                    if (colorBG == color_White)
-                    {
-                        colorBG = color_Black;
-                    }
-                    else
-                    {
-                        colorBG = color_White;
-                    }
+                    colorBG = colorBG == color_White ? color_Black : color_White;
                 }
-                if (colorBG == color_White)
-                {
-                    colorBG = color_Black;
-                }
-                else
-                {
-                    colorBG = color_White;
-                }
+                colorBG = colorBG == color_White ? color_Black : color_White;
             }
         }
 
         public void Move(Cell currentCell, Cell selectedCell)
         {
-            selectedCell.Piece = currentCell.Piece;
             selectedCell.PieceColor = currentCell.PieceColor;
             selectedCell.TextColor = currentCell.TextColor;
             selectedCell.Occupied = true;
-            selectedCell.PieceImg = currentCell.PieceImg;
-            selectedCell.NotifyPropertyChanged("Content");
 
+            if (currentCell.Piece == "Pawn" && (selectedCell.RowNumber == 7 || selectedCell.RowNumber == 0))
+            {
+                selectedCell.Piece = "Queen";
+                if (selectedCell.RowNumber == 7)
+                {
+                    selectedCell.PieceImg = "queenw.png";
+                }
+                else
+                {
+                    selectedCell.PieceImg = "queenb.png";
+                }
+            }
+            else
+            {
+                selectedCell.Piece = currentCell.Piece;
+                selectedCell.PieceImg = currentCell.PieceImg;
+            }
+            selectedCell.NotifyPropertyChanged("Content");
             currentCell.Piece = "";
             currentCell.PieceColor = "";
             currentCell.TextColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("#ffffff"));

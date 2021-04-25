@@ -70,14 +70,13 @@
 
                     <StackPanel Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
                         <Button Content="Add player" Command="{Binding AddPlayerCommand}" Style="{StaticResource Crud_Add}"/>
-                        <Button Margin="10,10,10,10" Content="Wijzigen"
+                        <Button Margin="10,10,10,10" Content="Edit player"
                     Command="{Binding ChangePlayerCommand}" Style="{StaticResource Crud_Edit}"/>
                         <Button Content="Delete player" Command="{Binding DeletePlayerCommand}" Style="{StaticResource Crud_Delete}" />
 
                     </StackPanel>
                 </Grid>
             </Border>
-           
-               </Grid>
+        </Grid>
     </Grid>
 </Window>

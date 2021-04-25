@@ -11,8 +11,8 @@ namespace Schaken.Model
         int id;
         string colorName;
 
-        public int ID { get { return id; } set { id = value; NotifyPropertyChanged(); } }
-        public string ColorName { get { return colorName; } set { colorName = value; NotifyPropertyChanged(); } }
+        public int ID { get { return id; } set { id = value; } }
+        public string ColorName { get { return colorName; } set { colorName = value; } }
 
         Color(int id, string colorName)
         {

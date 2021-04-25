@@ -34,6 +34,7 @@ namespace Schaken.ViewModel
         {
             PlayerDataService playerDS = new PlayerDataService();
             Players = new ObservableCollection<Player>(playerDS.GetPlayers());
+         
         }
        
 
@@ -109,6 +110,8 @@ namespace Schaken.ViewModel
             }
 
             // Refresh
+            ViewModelLocator.SelectPlayersViewModel.LoadPlayers();
+            ViewModelLocator.MatchHistoryViewModel.LoadPlayers();
             LoadPlayers();
         }
         private void ChangePlayer()
@@ -152,7 +155,10 @@ namespace Schaken.ViewModel
                     {
                         playerDS.UpdatePlayer(SelectedPlayer);
 
+
                         // Refresh
+                        ViewModelLocator.SelectPlayersViewModel.LoadPlayers();
+                        ViewModelLocator.MatchHistoryViewModel.LoadPlayers();
                         LoadPlayers();
                     }
                 }
@@ -167,6 +173,8 @@ namespace Schaken.ViewModel
                 playerDS.DeletePlayer(SelectedPlayer);
 
                 //Refresh
+                ViewModelLocator.SelectPlayersViewModel.LoadPlayers();
+                ViewModelLocator.MatchHistoryViewModel.LoadPlayers();
                 LoadPlayers();
             }
         }

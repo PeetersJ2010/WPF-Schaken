@@ -69,14 +69,16 @@ namespace Schaken.Model
             }
 
             //Get MatchID
-            string sql = "select * from Match order by ID desc";
+            string sql = "select ID from Match order by ID desc";
             List<String> bl = (List<String>)db.Query<String>(sql);
 
             if (bl.Count > 0)
             {
                 foreach (var item in bl)
                 {
+                    
                     matchID = Int32.Parse(item);
+                    break;
                 }
             }
 
@@ -91,6 +93,12 @@ namespace Schaken.Model
                 positionX,
                 positionY
             });
+        }
+
+        public List<Cell> GetBoardPieces(Board board)
+        {
+            string sql = "select p.pieceTypeID as name, p.colorID as color, p.positionX as posX, p.positionY as posY from Piece as p inner join PieceType as pt on pt.ID = p.pieceTypeID inner join Color as c on c.ID = p.colorID where p.matchID = " + board.ID;
+            return (List<Cell>)db.Query<Cell>(sql);
         }
     }
 }
